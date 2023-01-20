@@ -55,16 +55,19 @@ app.post("/api/shorturl", function (req, res) {
   const url = req.body.url;
   const hostname = new URL(url).hostname;
   // psl.get(extractHostname(url));
-  console.log(url);
   dns.lookup(hostname, function (err, address, family) {
     if (!err) {
-      ShortenedURLs[url] = index;
+      ShortenedURLs[index] = url;
       res.json({original_url: url, shorturl: index});
       index++;
     } else {
       res.json({error: "Invalid URL"});
     }
   });
+});
+
+app.get("/api/shorturl/:shorturl", function (req, res) {
+  res.redirect(ShortenedURLs[req.params.shorturl]);
 });
 
 app.listen(port, function () {
